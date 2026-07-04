@@ -1,7 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { LanguagePage } from '../pages/LanguagePage';
 import { HomePage } from '../pages/HomePage';
-import { LoginPage } from '../pages/LoginPage';
 
 test.describe('Wikipedia - Home page test', () => {
 
