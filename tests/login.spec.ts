@@ -7,17 +7,17 @@ import { LoginPage } from '../pages/LoginPage';
 test.describe('Wikipedia - Login test', () => {
 
   test('Invalid login', async ({ page }) => {
-    await page.goto('');
     const languagePage = new LanguagePage(page);
     const homePage = new HomePage(page);
     const loginPage = new LoginPage(page);
 
+    await languagePage.goTo();
     await languagePage.selectLanguage('English');
     await homePage.goToLogin();
     await loginPage.login('invalidUser', 'invalidPassword');
 
     const errorMessage = await loginPage.getErrorMessage();
-    console.log('Error message:', errorMessage);  
+    console.log('Error message:', errorMessage);
     expect(errorMessage).toContain('Incorrect username or password entered. Please try again.');
 
   });

@@ -9,6 +9,10 @@ export class LanguagePage {
         this.languages = page.locator('.link-box strong');
     }
 
+    async goTo() {
+        await this.page.goto('/');
+    }
+
     async selectLanguage(language: string) {
         await this.languages.filter({ hasText: language}).click();
     }
