@@ -2,7 +2,6 @@ import { test, expect } from '@playwright/test';
 import { LanguagePage } from '../pages/LanguagePage';
 import { HomePage } from '../pages/HomePage';
 
-
 test.describe('Wikipedia - Home page test', () => {
     test('Size heading test', async ({ page }) => {
         const languagePage = new LanguagePage(page);

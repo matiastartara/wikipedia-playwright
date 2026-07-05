@@ -3,7 +3,6 @@ import { LanguagePage } from '../pages/LanguagePage';
 import { HomePage } from '../pages/HomePage';
 import { LoginPage } from '../pages/LoginPage';
 
-
 test.describe('Wikipedia - Login test', () => {
   test('Invalid login', async ({ page }) => {
     const languagePage = new LanguagePage(page);
