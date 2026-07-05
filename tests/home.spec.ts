@@ -4,7 +4,6 @@ import { HomePage } from '../pages/HomePage';
 
 
 test.describe('Wikipedia - Home page test', () => {
-
     test('Size heading test', async ({ page }) => {
         const languagePage = new LanguagePage(page);
         const homePage = new HomePage(page);
@@ -17,6 +16,4 @@ test.describe('Wikipedia - Home page test', () => {
         expect(small).toBeLessThan(standard);
         expect(standard).toBeLessThan(large);
     });
-
-
 })  

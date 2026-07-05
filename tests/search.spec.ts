@@ -4,7 +4,6 @@ import { HomePage } from '../pages/HomePage';
 
 
 test.describe('Wikipedia - Search test', () => {
-
   test('Search for a term', async ({ page }) => {
     const languagePage = new LanguagePage(page);
     const homePage = new HomePage(page);

@@ -5,7 +5,6 @@ import { LoginPage } from '../pages/LoginPage';
 
 
 test.describe('Wikipedia - Login test', () => {
-
   test('Invalid login', async ({ page }) => {
     const languagePage = new LanguagePage(page);
     const homePage = new HomePage(page);
@@ -19,7 +18,6 @@ test.describe('Wikipedia - Login test', () => {
     const errorMessage = await loginPage.getErrorMessage();
     console.log('Error message:', errorMessage);
     expect(errorMessage).toContain('Incorrect username or password entered. Please try again.');
-
   });
 
   test('Valid login', async ({ page }) => {
@@ -45,7 +43,6 @@ test.describe('Wikipedia - Login test', () => {
     const displayName = wikipediaUsername!.charAt(0).toUpperCase() + wikipediaUsername!.slice(1);
     await expect(page.locator('#pt-userpage-2 span')).toContainText(displayName);
   })
-
 });
 
 
