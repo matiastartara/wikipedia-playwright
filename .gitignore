@@ -9,3 +9,7 @@ node_modules/
 
 # Environment variables — never commit real credentials
 .env
+
+# Self-healing cache
+.self-heal-cache.json
+
