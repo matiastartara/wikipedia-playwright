@@ -14,6 +14,8 @@
 - [Running Tests](#-running-tests)
 - [Test Suites](#-test-suites)
 - [Page Objects](#-page-objects)
+- [Self-Healing Locators](#-self-healing-locators-groq-llm)
+
 
 ---
 
@@ -161,3 +163,43 @@ const error = await loginPage.getErrorMessage();
 ```
 
 ---
+
+## 🩹 Self-Healing Locators (Groq LLM)
+
+This project contains an experimental **Self-Healing Locator** implementation located under the `self-healing/` directory. It uses the **Groq SDK** (`llama-3.1-8b-instant`) to dynamically repair broken selectors during test execution.
+
+### 🧠 How it Works
+
+```mermaid
+graph TD
+    A[Playwright attempts selector] --> B{Is Element Visible?}
+    B -- Yes --> C[Proceed with Test]
+    B -- No --> D{Exists in Cache?}
+    D -- Yes --> E[Try Cached Selector]
+    E --> B
+    D -- No --> F[Extract Lightweight DOM Snapshot]
+    F --> G[Send Selector + DOM to Groq LLM]
+    G --> H{LLM finds match?}
+    H -- Confidence >= 0.75 --> I[Save to .self-heal-cache.json]
+    I --> E
+    H -- Confidence < 0.75 --> J[Fail Test]
+```
+
+1. **Lightweight DOM Snapshot (`domSnapshot.ts`)**: Instead of sending the full HTML, we extract only interactive elements (buttons, inputs, links) to avoid exceeding LLM context and token limits.
+2. **LLM Healing (`llmHealer.ts`)**: We send the broken selector along with the snapshot to Groq, which returns a structured JSON suggesting a valid selector.
+3. **Caching (`healCache.ts`)**: Saves successful mappings to `.self-heal-cache.json` (ignored by Git) so subsequent test runs reuse the fixed selector instantly.
+4. **Wrapper (`healedLocator.ts`)**: The orchestrator which tests import instead of using standard `page.locator()`.
+
+### 🧪 Running the Self-Healing Test
+
+The test file `tests/self-healing-login.spec.ts` executes a login flow using **intentionally broken selectors** (e.g., `#wpNameXYZ` instead of `#wpName1`).
+
+To run it:
+
+```bash
+# Make sure your GROQ_API_KEY is configured in your .env file
+npx playwright test tests/self-healing-login.spec.ts
+```
+
+* **First run**: You will see warnings in the console showing the healing process and API calls to Groq. A `.self-heal-cache.json` file will be generated at the root.
+* **Second run**: The test runs immediately without calling the LLM since the locators are resolved from the local cache.
