@@ -43,7 +43,8 @@ wikipedia-playwright/
 ├── tests/                   # Test specs
 │   ├── home.spec.ts         # Home page tests (font size)
 │   ├── login.spec.ts        # Login tests (valid & invalid)
-│   └── search.spec.ts       # Search functionality tests
+│   ├── search.spec.ts       # Search functionality tests
+│   └── visual.spec.ts       # Visual regression tests (full page & element level)
 ├── .env                     # Environment variables (not committed)
 ├── playwright.config.ts     # Playwright configuration
 ├── tsconfig.json            # TypeScript configuration
@@ -90,7 +91,10 @@ WIKIPEDIA_PASSWORD=your_wikipedia_password
 
 ### Playwright Config
 
-The base URL is set to `https://www.wikipedia.org/` and tests run on **Chromium** by default. Retries and workers are automatically adjusted for CI environments.
+The base URL is set to `https://www.wikipedia.org/` and tests run on **Chromium** by default. Retries and workers are automatically adjusted for CI environments. Global visual testing configurations are set under `expect.toHaveScreenshot`:
+- `maxDiffPixelRatio: 0.02`
+- `type: 'webp'` (utilizes WebP image format for snapshot compression and faster performance)
+- `retryStrategy: 'bounce'` (retries visual comparisons by re-evaluating baseline mismatches)
 
 ---
 
@@ -100,34 +104,57 @@ The base URL is set to `https://www.wikipedia.org/` and tests run on **Chromium*
 # Run all tests
 npx playwright test
 
-# Run a specific test file
-npx playwright test tests/login.spec.ts
+# Run a specific test file (e.g. visual tests)
+npx playwright test tests/visual.spec.ts
 
 # Run tests in headed mode (watch the browser)
 npx playwright test --headed
 
-# Open the HTML report after a run
+# Update baseline visual snapshots
+npx playwright test --update-snapshots
+
+# Open the HTML report to inspect test results and visual diffs
 npx playwright show-report
 ```
+
+### 📸 Visual Snapshot Management & Reports
+
+1. **Updating Baseline Snapshots (`--update-snapshots`)**:
+   - Use `npx playwright test --update-snapshots` to regenerate baseline visual reference images when a visual design change is **intentional** (e.g., website redesign or UI update).
+   - **Important**: Never use `--update-snapshots` to suppress test failures without checking the visual diff report first (`npx playwright show-report`) to confirm that the change is expected and not a visual bug.
+
+2. **Viewing Visual Differences**:
+   - Run `npx playwright show-report` after a failed visual test run. The interactive report displays side-by-side snapshot comparisons, diff overlays, and pixel difference metrics.
+
+3. **Environment-Specific Baselines & WebP Support**:
+   - Snapshot image filenames end with `.webp` and automatically include browser engine and OS specifications (e.g., `homepage-full-chromium-darwin.webp`).
+   - If tests are executed across different platforms (e.g., macOS locally vs. Linux in CI), visual baseline images should be generated and maintained in the target execution environment (e.g., via CI pipeline execution) to avoid cross-platform rendering mismatches.
 
 ---
 
 ## 🧪 Test Suites
 
-### 🏠 `home.spec.ts` — Home Page
+### 🏠 `home.spec.ts` — Functional Home Page Tests
 
 | Test | Description |
 |------|-------------|
 | `Size heading test` | Verifies that font sizes increase correctly: Small < Standard < Large |
 
-### 🔐 `login.spec.ts` — Login
+### 🎨 `visual.spec.ts` — Visual Regression Tests
+
+| Test | Description |
+|------|-------------|
+| `Full home page visual regression test` | Captures a full page WebP screenshot (`fullPage: true`) of Wikipedia English home page using `retryStrategy: 'bounce'`. Dynamic sections like Featured Article (`#mp-tfa`), In the news (`#mp-itn`), On this day (`#mp-otd`), Featured Picture (`#mp-tfp`), and Did you know (`#mp-dyk`) are masked using `mask` to prevent false positives. |
+| `Search input component visual regression test` | Captures a targeted WebP component screenshot of `#searchInput` using `retryStrategy: 'bounce'` for an isolated, highly stable visual comparison. |
+
+### 🔐 `login.spec.ts` — Functional Login Tests
 
 | Test | Description |
 |------|-------------|
 | `Invalid login` | Submits wrong credentials and asserts the error message is shown |
 | `Valid login` | Logs in with `.env` credentials and verifies the user is redirected and their username is displayed |
 
-### 🔎 `search.spec.ts` — Search
+### 🔎 `search.spec.ts` — Functional Search Tests
 
 | Test | Description |
 |------|-------------|
