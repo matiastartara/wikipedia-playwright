@@ -26,6 +26,7 @@ test.describe('Wikipedia - Visual Regression Tests', () => {
                 page.locator('#mp-otd'),
                 page.locator('#mp-tfp'),
                 page.locator('#mp-dyk'),
+                page.locator('#mp-tfl'),
             ],
             maxDiffPixelRatio: 0.02,
         });
