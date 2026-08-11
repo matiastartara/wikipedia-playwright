@@ -24,6 +24,13 @@ export default defineConfig({
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: 'html',
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
+  expect: {
+    toHaveScreenshot: {
+      maxDiffPixelRatio: 0.02,
+      type: 'webp',
+      retryStrategy: 'bounce',
+    },
+  },
   use: {
     baseURL: 'https://www.wikipedia.org/',
     trace: 'on-first-retry',
