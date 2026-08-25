@@ -5,12 +5,36 @@ export class HomePage {
     readonly loginBtn: Locator;
     readonly searchInput: Locator;
     readonly resultList: Locator;
+    // Main Page sections whose content changes daily and must be masked in visual regression tests.
+    readonly featuredArticle: Locator;
+    readonly inTheNews: Locator;
+    readonly onThisDay: Locator;
+    readonly featuredPicture: Locator;
+    readonly didYouKnow: Locator;
+    readonly featuredList: Locator;
 
     constructor(page: Page) {
         this.page = page;
         this.loginBtn = page.locator('span').filter({ hasText: 'Log in' }).first();
         this.searchInput = page.locator('#searchInput');
         this.resultList = page.locator('[role="option"] .cdx-menu-item__text .cdx-menu-item__text__label bdi');
+        this.featuredArticle = page.locator('#mp-tfa');
+        this.inTheNews = page.locator('#mp-itn');
+        this.onThisDay = page.locator('#mp-otd');
+        this.featuredPicture = page.locator('#mp-tfp');
+        this.didYouKnow = page.locator('#mp-dyk');
+        this.featuredList = page.locator('#mp-tfl');
+    }
+
+    get dynamicMainPageBlocks(): Locator[] {
+        return [
+            this.featuredArticle,
+            this.inTheNews,
+            this.onThisDay,
+            this.featuredPicture,
+            this.didYouKnow,
+            this.featuredList,
+        ];
     }
 
     async goToLogin() {

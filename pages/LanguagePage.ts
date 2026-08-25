@@ -15,5 +15,6 @@ export class LanguagePage {
 
     async selectLanguage(language: string) {
         await this.languages.filter({ hasText: language}).click();
+        await this.page.waitForLoadState('networkidle');
     }
 }
