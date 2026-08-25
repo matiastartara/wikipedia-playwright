@@ -18,6 +18,7 @@ test.describe('Wikipedia - Visual Regression Tests', () => {
         // #mp-dyk: Did you know...
         // #mp-tfl: Today's featured list
         const homePage = new HomePage(page);
+        await homePage.freezeDynamicBlockHeights();
         await expect(page).toHaveScreenshot('homepage-full.webp', {
             fullPage: true,
             mask: homePage.dynamicMainPageBlocks,
