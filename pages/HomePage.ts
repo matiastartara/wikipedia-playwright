@@ -5,7 +5,6 @@ export class HomePage {
     readonly loginBtn: Locator;
     readonly searchInput: Locator;
     readonly resultList: Locator;
-    // Main Page sections whose content changes daily and must be masked in visual regression tests.
     readonly featuredArticle: Locator;
     readonly inTheNews: Locator;
     readonly onThisDay: Locator;
