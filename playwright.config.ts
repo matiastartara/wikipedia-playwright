@@ -27,8 +27,6 @@ export default defineConfig({
   expect: {
     toHaveScreenshot: {
       maxDiffPixelRatio: 0.02,
-      type: 'webp',
-      retryStrategy: 'bounce',
     },
   },
   use: {
